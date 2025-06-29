@@ -3,6 +3,7 @@ package structures.impl;
 import structures.CustomList;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public final class CustomArrayList<T> implements CustomList<T> {
 

@@ -2,34 +2,26 @@ package test;
 
 import model.Student;
 import org.junit.jupiter.api.*;
-import structures.impl.*;
 import structures.CustomList;
+import structures.impl.CustomArrayList;
+import structures.impl.CustomLinkedList;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import static org.junit.jupiter.api.Assertions.*;
 
-class CustomArrayListTest {
+class CustomLinkedListTest {
 
     static CustomList<Student> students;
 
     @BeforeAll
     static void init() {
-        students = new CustomArrayList<>();
-    }
-
-    @BeforeEach
-    void setUp() {
+        students = new CustomLinkedList<>();
     }
 
     @AfterEach
     void tearDown() {
         students.clear();
-    }
-
-    @Test
-    void tryAddNullValueTiListThenRejectAdditionAndReturnFalseValue() {
-        boolean isAdded = students.add(null);
-
-        assertEquals(0, students.size());
-        assertFalse(isAdded);
     }
 
     @Test
@@ -87,7 +79,66 @@ class CustomArrayListTest {
     }
 
     @Test
-    void addStudentToListAndRemoveStudentByIndexAndTryGetStudentByIndexThenThrowArrayIndexOfBoundsException() {
+    void testForBigDataInputWhenAddedElementsThenListSizeIsCorrect() {
+        int inputDataSize = 50;
+        CustomList<Integer> numbers = new CustomLinkedList<>();
+
+        for (int i = 0; i < inputDataSize; i++) {
+            numbers.add(i);
+        }
+
+        assertEquals(inputDataSize, numbers.size());
+    }
+
+    @Test
+    void whenGettingElementFromLowerHalfListThenFindFromTailAndGetCorrectElement() {
+        int listSize = 5;
+        int expectedValue = 4;
+        CustomList<Integer> numbers = new CustomLinkedList<>();
+        for (int i = 0; i < listSize; i++) {
+            numbers.add(i);
+        }
+
+        Integer result = numbers.get(expectedValue);
+
+        assertEquals(expectedValue, result);
+    }
+
+    @Test
+    void testForBigDataWhenRandomDeletedElementsThenListSizeIsCorrect() {
+        int inputDataSize = 50;
+        int numberOfChecks = 50;
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        List<Integer> libraryList = new ArrayList<>();
+        CustomList<Integer> customList = new CustomLinkedList<>();
+        for (int i = 0; i < inputDataSize; i++) {
+            customList.add(i);
+            libraryList.add(i);
+        }
+
+        for (int i = 0; i < numberOfChecks; i++) {
+            int randomNumber = random.nextInt(inputDataSize);
+            try {
+                customList.remove(randomNumber);
+                libraryList.remove(randomNumber);
+            } catch (ArrayIndexOutOfBoundsException e) {
+
+            }
+        }
+
+        assertEquals(libraryList.size(), customList.size());
+    }
+
+    @Test
+    void whenAddedNullValueThenThrowIllegalArgumentException() {
+        RuntimeException exception = assertThrows(IllegalArgumentException.class,
+                () -> students.add(null));
+
+        assertEquals(IllegalArgumentException.class, exception.getClass());
+    }
+
+    @Test
+    void addStudentToListAndRemoveStudentByIndexAndTryGetStudentByIndexThenThrowArrayIndexOutOfBoundsException() {
         Student john = new Student("John");
 
         students.add(john);
