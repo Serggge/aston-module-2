@@ -3,13 +3,11 @@ package structures.impl;
 import structures.CustomList;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 public final class CustomArrayList<T> implements CustomList<T> {
 
-    private static int capacity = 10;
-    private static int size;
-    private static int indexNextElement = 0;
+    private int capacity = 10;
+    private int size;
     private Object[] array;
 
     public CustomArrayList() {
@@ -17,8 +15,8 @@ public final class CustomArrayList<T> implements CustomList<T> {
     }
 
     public CustomArrayList(int capacity) {
-        CustomArrayList.capacity = capacity;
-        array = new Object[capacity];
+        this.capacity = capacity;
+        this.array = new Object[capacity];
     }
 
     @Override
@@ -27,8 +25,7 @@ public final class CustomArrayList<T> implements CustomList<T> {
             return false;
         }
         increaseCapacityIfFull();
-        array[indexNextElement++] = element;
-        size++;
+        array[size++] = element;
         return true;
     }
 
@@ -41,7 +38,6 @@ public final class CustomArrayList<T> implements CustomList<T> {
     @Override
     public void remove(int index) {
         checkIndexBounds(index);
-        array[index] = null;
         moveElementsUp(index);
         size--;
     }
@@ -58,7 +54,6 @@ public final class CustomArrayList<T> implements CustomList<T> {
         if (elementIndex == -1) {
             return false;
         } else {
-            array[elementIndex] = null;
             moveElementsUp(elementIndex);
             size--;
             return true;
@@ -80,7 +75,6 @@ public final class CustomArrayList<T> implements CustomList<T> {
     @Override
     public void clear() {
         Arrays.fill(array, null);
-        indexNextElement = 0;
         size = 0;
     }
 
@@ -90,14 +84,11 @@ public final class CustomArrayList<T> implements CustomList<T> {
         }
     }
 
-    private boolean increaseCapacityIfFull() {
+    private void increaseCapacityIfFull() {
         if (array.length == capacity) {
             int newCapacity = (int) (capacity * 1.5 + 1);
             array = Arrays.copyOf(array, newCapacity);
             capacity = newCapacity;
-            return true;
-        } else {
-            return false;
         }
     }
 

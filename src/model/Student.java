@@ -1,45 +1,28 @@
 package model;
 
-import java.util.Objects;
+import java.util.Collections;
+import java.util.List;
 
 public class Student {
-    private static int count = 0;
-    private final int id;
     private final String name;
+    private List<Book> books;
 
     public Student(String name) {
-        id = ++count;
         this.name = name;
+        this.books = Collections.emptyList();
     }
 
-    public int getId() {
-        return id;
+    public Student(String name, List<Book> books) {
+        this(name);
+        this.books = books;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || obj.getClass() != Student.class) {
-            return false;
-        } else {
-            Student other = (Student) obj;
-            return id == other.getId();
-        }
+    public List<Book> getBooks() {
+        return Collections.unmodifiableList(books);
     }
 
     @Override
     public String toString() {
-        return String.format("%s {id:%d, name:%s}", getClass().getSimpleName(), id, name);
+        return name;
     }
 }
